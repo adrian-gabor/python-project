@@ -1,4 +1,5 @@
 # python-project
 
 Barcfelona to chuj
-A nie, to jednak ¿¹rcik
+A nie, to jednak Å¼Å¡rcik
+asxas
