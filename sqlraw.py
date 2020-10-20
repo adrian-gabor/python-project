@@ -46,10 +46,10 @@ cur = con.cursor()
 con.commit()
 
 
-print("Witam w naszym zjebanym serwisie")
-#login()
-print("Załóż konto zjebie")
-new_login()
+# print("Witam w naszym zjebanym serwisie")
+login()
+# print("Załóż konto zjebie")
+# new_login()
 
 
 
