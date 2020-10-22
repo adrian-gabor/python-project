@@ -44,6 +44,34 @@ def new_login():
         con.commit()
 
 
+#funkcja wypisująca wszystkie rekordy z dowolnej tabeli
+def pokaż_tabele():
+    tabela = input("Którą tabele pokazać:")
+    cur.execute('SELECT * FROM {};'.format(tabela))
+    rekordy = cur.fetchall()
+    for rekord in rekordy:
+        print(rekord[::])
+
+
+#funkcja do usuwania ucznia
+def usuń_ucznia():
+    rekord = input("Którego ucznia usunąć?")
+    cur.execute('SELECT * FROM student WHERE id_student = {} '.format(rekord))
+    student = cur.fetchone()
+    print("Czy usunąć ucznia:{}".format(student[::]))
+    answer = input("(y/n)")
+    if answer=="y":
+        cur.execute('DELETE FROM student WHERE id_student = {} '.format(rekord))
+        con.commit()
+    else:
+        print("TO sam wypierdalaj")
+    
+
+#funkcja podsumowująca wszystkie godziny nauczycieli
+# def sum():
+    
+
+
 # dostęp do kolumn przez indeksy i przez nazwy
 con.row_factory = sqlite3.Row
 # utworzenie obiektu kursora
@@ -54,8 +82,9 @@ con.commit()
 # login()
 print("Witam w naszym zjebanym serwisie")
 print("Załóż konto zjebie")
-new_login()
-
+# new_login()
+pokaż_tabele()
+# usuń_ucznia()
 
 
 
