@@ -68,6 +68,7 @@ def usuń_ucznia():
     
 
 #funkcja podsumowująca wszystkie godziny nauczycieli
+# tu przestałem sie bawić bo przechodzimy na ORM XDDD
 # def sum():
     
 
