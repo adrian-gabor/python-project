@@ -7,7 +7,7 @@ from sqlalchemy.dialects.sqlite import \
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 import stdiomask
-
+from datetime import date
 
 
 if os.path.exists('test.db'):
@@ -44,8 +44,7 @@ class Hours(BazaModel):
     __tablename__ = 'hours'
     id_hours = Column(Integer, primary_key = True)
     value = Column(Integer, nullable = False)
-    #nie da sie wpisać daty sprawdzić!
-    date = Column(String(100), nullable = False)
+    date = Column(DATE, nullable = False)
     id_student = Column(Integer, ForeignKey('student.id_student'))
     id_teacher = Column(Integer, ForeignKey('teacher.id_teacher'))
     
@@ -79,11 +78,11 @@ sesja.add_all([
 
 
 sesja.add_all([
-    Hours(value='2', date='2014-10-06', id_student='1', id_teacher='4'),
-    Hours(value='4', date='2014-10-08', id_student='2', id_teacher='1'),
-    Hours(value='2', date='2014-10-07', id_student='3', id_teacher='1'),
-    Hours(value='1', date='2014-10-08', id_student='1', id_teacher='3'),
-    Hours(value='3', date='2014-10-09', id_student='4', id_teacher='2'),
+    Hours(value='2', date=date(2014,10,6), id_student='1', id_teacher='4'),
+    Hours(value='4', date=date(2014,10,8), id_student='2', id_teacher='1'),
+    Hours(value='2', date=date(2014,10,7), id_student='3', id_teacher='1'),
+    Hours(value='1', date=date(2014,10,8), id_student='1', id_teacher='3'),
+    Hours(value='3', date=date(2014,10,8), id_student='4', id_teacher='2'),
     ])     
     
 sesja.commit()
@@ -93,28 +92,59 @@ sesja.commit()
 def login():
     print("Witamy w naszym zjabanym serwisie")
     input_login = input("Podaj login:")
-    found_teacher = sesja.query(Teacher).filter_by(login=input_login).one()
+    found_teacher = sesja.query(Teacher).filter_by(login=input_login).one_or_none()
     print(type(found_teacher))
-    # if type(found_teacher) != type(None):
-        # input_password = stdiomask.getpass(prompt="Podaj hasełko: ")
-        # if input_password == found_teacher.password:
-            # print("Gratulacje kurwa")
-        # else:
-            # print("Złe hasło")
-            # login()
-    # else:
-        # print("Zły login")
-        # login()
+    if type(found_teacher) != type(None):
+        input_password = stdiomask.getpass(prompt="Podaj hasełko: ")
+        if input_password == found_teacher.password:
+            print("Gratulacje kurwa")
+        else:
+            print("Złe hasło")
+            login()
+    else:
+        print("Zły login")
+        login()
 
+# funkcja do usuwania rekordów z dowolnej tabeli
+# PROBLEM że jak ktoś wpisze indeks którego nie ma to wypierdoli błąd 
+def delete_record():
+    table = input("Z jakiej tabeli usunąć rekord:")
+    #Wyświtlamy naszą tabele i pytamy o indeks rekordu który chcemy usunąć
+    show_table(table)
+    record = input("Który wiersz usunąć:")
+    #Za pomocą funkcji eval() zmieniamy obiekt klast String na obiekt klasy wartości naszego stringa
+    sesja.delete(sesja.query(eval(table)).get(int(record)))
+    show_table(table)
+    sesja.commit()
+
+
+
+#funkcja wyswietlająca tabele ale brzydko i do poprawy :(
+def show_table(input_table):
+    table = input_table
+    for godziny in sesja.query(eval(table)).all():
+        print(godziny.__dict__.values())
+
+
+   
 # def czytajdane():
     # for godziny in sesja.query(Hours).join(Student).join(Teacher).all():
         # print(godziny.value, godziny.date, godziny.student.first_name, godziny.teacher.first_name, godziny.teacher.last_name)
 
+# problemy
+def change_field():
+    table = input("W jakiej tabeli chcesz dokonań zmian:")
+    show_table(table)
+    field_to_change = input("Jakie pole zmodyfikować:")
+    zmiana = sesja.query(eval(table)).filter_by( = 1).one()
+    zmiana.id_student = sesja.query(Student.id_student).filter_by(id_student = 2).scalar()
 
-# czytajdane()
+
+
+# print(type(Student.login))
+change_field()
 # sesja.close()
-login()
-
+# login()
 
 
 
